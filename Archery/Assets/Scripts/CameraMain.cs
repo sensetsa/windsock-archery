@@ -19,21 +19,33 @@ public class CameraMain : MonoBehaviour {
         initialRotation = transform.rotation;
 
         BowEvents.LoadArrow += GetActiveArrow;              // get active arrow when arrow is loaded
+        GameStateEvents.SwitchedToLoadArrowPhase += SwitchViewToBehindPlayer; // place camera behind player during the load phase
+        GameStateEvents.SwitchedToShootArrowPhase += SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
 	}
 	
 	void LateUpdate () {
         switch (gameManager.currentState)
         {
-            case GameManager.GameState.PullArrowPhase:
-                transform.position = initialPosition;
-                transform.rotation = initialRotation;
-                break;
             case GameManager.GameState.ShootArrowPhase:
                 transform.position = activeArrow.transform.position + cameraFollowArrowDistanceOffset;
                 transform.rotation = Quaternion.Euler(cameraFollowArrowRotationOffset);
                 break;
+            default:
+                break;
         }
 	}
+    public void SwitchViewToBehindPlayer()
+    {
+        transform.position = initialPosition;
+        transform.rotation = initialRotation;
+        Camera camera = GetComponent<Camera>();
+        camera.fieldOfView = 60f;
+    }
+    public void SwitchViewToFollowArrow()
+    {
+        Camera camera = GetComponent<Camera>();
+        camera.fieldOfView = 80f;
+    }
     public void GetActiveArrow()
     {
         activeArrow = bowMain.loadedArrow;
@@ -41,5 +53,7 @@ public class CameraMain : MonoBehaviour {
     private void OnDestroy() //avoid memory leaks
     {
         BowEvents.LoadArrow -= GetActiveArrow;              // get active arrow when arrow is loaded
+        GameStateEvents.SwitchedToLoadArrowPhase -= SwitchViewToBehindPlayer;
+        GameStateEvents.SwitchedToShootArrowPhase -= SwitchViewToFollowArrow;
     }
 }

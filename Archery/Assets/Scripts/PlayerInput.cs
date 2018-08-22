@@ -44,11 +44,11 @@ public class PlayerInput : MonoBehaviour {
             if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
                 bowMain.ShootArrow(Vector2.zero); // TODO actual shoot arrow calculations
         }
-        if(Input.GetKey("q"))
+        if(Input.GetKey("e"))
         {
             bowMain.RotateBow(20);
         }
-        if(Input.GetKey("e"))
+        if(Input.GetKey("q"))
         {
             bowMain.RotateBow(-20);
         }

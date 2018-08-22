@@ -29,10 +29,12 @@ public class GameManager : MonoBehaviour {
     public void ChangeToShootArrowPhase()
     {
         currentState = GameState.ShootArrowPhase;
+        GameStateEvents.RaiseLevelEvent(GameStateEvents.GameStateEventType.SwitchedToShootArrowPhase);
     }
     public void ChangeToPullArrowPhase()
     {
         currentState = GameState.PullArrowPhase;
+        GameStateEvents.RaiseLevelEvent(GameStateEvents.GameStateEventType.SwitchedToLoadArrowPhase);
     }
     private void OnDestroy() // avoid memory leaks
     {
