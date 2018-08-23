@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class BowMain : MonoBehaviour {
-    const float MINIMUM_STRENGTH_TO_SHOOT_ARROW = 0.2f;
-    [Range(0f, 1f)] public float bowPullStrength = 0f;
+    public float minimumStrengthToShootArrow = 0.2f;
+    [HideInInspector][Range(0f, 1f)] public float bowPullStrength = 0f;
     [SerializeField] float bowPullStrengthMultiplier = 100f; //used to normalize pull vector to 0-1 range
     [SerializeField] float rotateDamp = 5f; //multiplier used to reduce bow rotation
-    [SerializeField] float shootForce = 30f;
+    public float shootForce = 30f;
     [SerializeField] GameObject prefabArrow;
     [HideInInspector] public GameObject loadedArrow;
 
@@ -30,7 +30,7 @@ public class BowMain : MonoBehaviour {
     }
     public void ShootArrow()
     {
-        if (!(bowPullStrength > MINIMUM_STRENGTH_TO_SHOOT_ARROW))
+        if (!(bowPullStrength > minimumStrengthToShootArrow))
             return;
         if (loadedArrow == null)
             return;
