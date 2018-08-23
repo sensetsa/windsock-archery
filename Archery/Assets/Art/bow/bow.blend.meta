@@ -1,29 +1,31 @@
 fileFormatVersion: 2
-guid: da93f670816535749b03ccc0b6ec65dd
+guid: d27c1b8a5c1d99344b0c5e68d4bda31b
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: middle
-    100002: stands
-    100004: //RootNode
-    100006: targetBoard
-    400000: middle
-    400002: stands
-    400004: //RootNode
-    400006: targetBoard
-    2100000: unnamed
-    2300000: middle
-    2300002: stands
-    2300004: targetBoard
-    3300000: middle
-    3300002: stands
-    3300004: targetBoard
-    4300000: middle
-    4300002: targetBoard
-    4300004: stands
+    100000: Armature
+    100002: //RootNode
+    100004: Cube
+    100006: lowerTwig1
+    100008: lowerTwig2
+    100010: root
+    100012: string
+    100014: upperTwig1
+    100016: upperTwig2
+    400000: Armature
+    400002: //RootNode
+    400004: Cube
+    400006: lowerTwig1
+    400008: lowerTwig2
+    400010: root
+    400012: string
+    400014: upperTwig1
+    400016: upperTwig2
+    2100000: Material_006__bowDiffuse_png
+    4300000: Cube
     7400000: Default Take
     9500000: //RootNode
-    2186277476908879412: ImportLogs
+    13700000: Cube
   externalObjects: {}
   materials:
     importMaterials: 1

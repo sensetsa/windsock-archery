@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class GameManager : MonoBehaviour {
-    [SerializeField] float secondsBeforeContinueToNextLevel = 2;
+    [SerializeField] float secondsBeforeContinueToNextLevel = 5;
     [SerializeField] private float gameScore = 0;
     public float GameScore { get { return gameScore; } set { gameScore = value; } }
     public enum GameState
@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour {
     public GameState currentState = GameState.PullArrowPhase;
 	// Use this for initialization
 	void Start () {
-        BowEvents.LandArrow += WaitForSecondsContinueToNextLevel;
         BowEvents.ShootArrow += ChangeToShootArrowPhase;
+        BowEvents.ShootArrow += WaitForSecondsContinueToNextLevel;
 	}
 	
     public void WaitForSecondsContinueToNextLevel()
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
     }
     private void OnDestroy() // avoid memory leaks
     {
-        BowEvents.LandArrow -= WaitForSecondsContinueToNextLevel;
         BowEvents.ShootArrow -= ChangeToShootArrowPhase;
+        BowEvents.ShootArrow -= WaitForSecondsContinueToNextLevel;
     }
 }

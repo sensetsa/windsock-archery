@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 public class CameraMain : MonoBehaviour {
     Vector3 initialPosition;
     Quaternion initialRotation;
+    float initialFOV;
     [SerializeField] Vector3 cameraFollowArrowDistanceOffset = Vector3.zero;
     [SerializeField] Vector3 cameraFollowArrowRotationOffset = Vector3.zero;
 
@@ -15,9 +16,10 @@ public class CameraMain : MonoBehaviour {
 	void Start () {
         Assert.IsNotNull(bowMain);
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        Camera camera = GetComponent<Camera>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
-
+        initialFOV = camera.fieldOfView;
         BowEvents.LoadArrow += GetActiveArrow;              // get active arrow when arrow is loaded
         GameStateEvents.SwitchedToLoadArrowPhase += SwitchViewToBehindPlayer; // place camera behind player during the load phase
         GameStateEvents.SwitchedToShootArrowPhase += SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
@@ -39,7 +41,7 @@ public class CameraMain : MonoBehaviour {
         transform.position = initialPosition;
         transform.rotation = initialRotation;
         Camera camera = GetComponent<Camera>();
-        camera.fieldOfView = 60f;
+        camera.fieldOfView = initialFOV;
     }
     public void SwitchViewToFollowArrow()
     {

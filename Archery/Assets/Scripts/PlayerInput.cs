@@ -20,37 +20,29 @@ public class PlayerInput : MonoBehaviour {
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    startPos = touch.position;
-                    bowMain.LoadArrow();
+                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    {
+                        startPos = touch.position;
+                        bowMain.LoadArrow();
+                    }
                     break;
                 case TouchPhase.Moved:
-                    touchVector = touch.position - startPos;
-                    //bowMain.RotateBow(touchVector);
-                    bowMain.PullArrow(touchVector);
+                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    {
+                        touchVector = touch.position - startPos;
+                        bowMain.RotateBowHorizontal(touch.position.x - startPos.x);
+                        bowMain.RotateBowVertical(touch.position.y - startPos.y);
+                        bowMain.PullArrow(startPos.y - touch.position.y);
+                    }
                     break;
                 case TouchPhase.Ended:
-                    touchVector = touch.position - startPos;
-                    bowMain.ShootArrow(touchVector);
+                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    {
+                        touchVector = touch.position - startPos;
+                        bowMain.ShootArrow();
+                    }
                     break;
             }
-        }
-        if(Input.GetMouseButtonDown(0))
-        {
-            if(gameManager.currentState == GameManager.GameState.PullArrowPhase)
-                bowMain.LoadArrow();
-        }
-        if(Input.GetMouseButtonDown(1))
-        {
-            if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
-                bowMain.ShootArrow(Vector2.zero); // TODO actual shoot arrow calculations
-        }
-        if(Input.GetKey("e"))
-        {
-            bowMain.RotateBow(20);
-        }
-        if(Input.GetKey("q"))
-        {
-            bowMain.RotateBow(-20);
         }
     }
 }

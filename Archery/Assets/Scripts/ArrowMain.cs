@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class ArrowMain : MonoBehaviour {
-    public VariableTransform variableTransform;
+    [HideInInspector] public VariableTransform variableTransform;
     Rigidbody rigidbody;
     [SerializeField] Collider arrowHeadCollider;
 
@@ -57,5 +57,9 @@ public class ArrowMain : MonoBehaviour {
             case ArrowState.LandedArrow:
                 break;
         }
+    }
+    private void OnDrawGizmos()
+    {
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 10, Color.red);
     }
 }

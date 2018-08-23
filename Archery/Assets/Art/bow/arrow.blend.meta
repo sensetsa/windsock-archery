@@ -1,43 +1,25 @@
 fileFormatVersion: 2
-guid: d27c1b8a5c1d99344b0c5e68d4bda31b
+guid: 61c638e2872e44149a112979fcb01c45
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    100000: Armature
-    100002: //RootNode
-    100004: Cube
-    100006: lowerTwig1
-    100008: lowerTwig2
-    100010: root
-    100012: string
-    100014: upperTwig1
-    100016: upperTwig2
-    100018: arrowHead
-    400000: Armature
-    400002: //RootNode
-    400004: Cube
-    400006: lowerTwig1
-    400008: lowerTwig2
-    400010: root
-    400012: string
-    400014: upperTwig1
-    400016: upperTwig2
-    400018: arrowHead
-    2100000: unnamed
-    2300000: arrowHead
-    3300000: arrowHead
-    4300000: Cube
-    4300002: arrowHead
+    100000: //RootNode
+    400000: //RootNode
+    2100000: Material_006__TexturesCom_WoodFine0026_S_jpg
+    2100002: Material_006
+    2100004: Material_006__TexturesCom_MetalScratches0082_2_seamless_S_jpg
+    2100006: Material_006__bowDiffuse_png
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: arrowHead
     7400000: Default Take
     9500000: //RootNode
-    13700000: Cube
-    2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+//[ExecuteInEditMode]
 public class VariableTransform : MonoBehaviour {
     public VariableTransformReference variableTransformReference;
     float referenceVal;
