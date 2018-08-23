@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     {
         PullArrowPhase, ShootArrowPhase
     }
-    public GameState currentState = GameState.PullArrowPhase;
+    [HideInInspector] public GameState currentState = GameState.PullArrowPhase;
 	// Use this for initialization
 	void Start () {
         BowEvents.ShootArrow += ChangeToShootArrowPhase;
