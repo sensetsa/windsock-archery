@@ -4,45 +4,47 @@ using UnityEngine;
 using UnityEngine.Assertions;
 public class ArrowMain : MonoBehaviour {
     [HideInInspector] public VariableTransform variableTransform;
-    Rigidbody rigidbody;
-    [SerializeField] Collider arrowHeadCollider;
+    private Rigidbody rigidbody;
+    [SerializeField] private Collider arrowHeadCollider;
 
     public enum ArrowState
     {
         ShootArrow, LoadedToBow, LandedArrow
     }
     public ArrowState currentState = ArrowState.LoadedToBow;
+    private bool arrowLandFlag = false;
 
-    bool calledBowEventLandedArrowFlag = false;
-    void Start () {
-        Assert.IsNotNull(arrowHeadCollider);
+    GameManager gameManager;
+    private void Start () {
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         variableTransform = GetComponent<VariableTransform>();
         variableTransform.variableTransformReference = GetComponentInParent<VariableTransformReference>();
         rigidbody = GetComponent<Rigidbody>();
-
+        Assert.IsNotNull(arrowHeadCollider);
+        Assert.IsNotNull(rigidbody);
         LevelEvents.ContinueToNextLevel += this.DestroyObject;  //destroy arrow on loading next level
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (arrowLandFlag)
+            return;
+        arrowLandFlag = true;
         if (collision.gameObject.tag == "Target")    //arrow scoring
         {
             currentState = ArrowState.LandedArrow;
             rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            BowEvents.RaiseBowEvent(BowEvents.BowEventType.LandArrow);
         }
-        else
+        else if (gameManager != null)       //if arrow landed on ground
         {
+            gameManager.AddScore(0);
             currentState = ArrowState.LandedArrow;
-        }
-        if(!calledBowEventLandedArrowFlag)
-        {
-            calledBowEventLandedArrowFlag = true;
             BowEvents.RaiseBowEvent(BowEvents.BowEventType.LandArrow);
         }
     }
-    public void DestroyObject()
+    private void DestroyObject()
     {
         Destroy(this.gameObject);
-        LevelEvents.ContinueToNextLevel -= this.DestroyObject;
     }
     private void Update()
     {
@@ -57,6 +59,10 @@ public class ArrowMain : MonoBehaviour {
             case ArrowState.LandedArrow:
                 break;
         }
+    }
+    private void OnDestroy()
+    {
+        LevelEvents.ContinueToNextLevel -= this.DestroyObject;
     }
     private void OnDrawGizmos()
     {

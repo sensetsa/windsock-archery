@@ -69,27 +69,3 @@ public static class BowEvents
 
     }
 }
-public static class GameStateEvents
-{
-    public enum GameStateEventType
-    {
-        SwitchedToLoadArrowPhase, SwitchedToShootArrowPhase
-    }
-    public static event Action SwitchedToLoadArrowPhase;
-    public static event Action SwitchedToShootArrowPhase;
-    public static void RaiseLevelEvent(GameStateEventType gameStateEventType)
-    {
-        switch (gameStateEventType)
-        {
-            case (GameStateEventType.SwitchedToLoadArrowPhase):
-                if (SwitchedToLoadArrowPhase != null)
-                    SwitchedToLoadArrowPhase();
-                break;
-            case (GameStateEventType.SwitchedToShootArrowPhase):
-                if (SwitchedToShootArrowPhase != null)
-                    SwitchedToShootArrowPhase();
-                break;
-        }
-
-    }
-}

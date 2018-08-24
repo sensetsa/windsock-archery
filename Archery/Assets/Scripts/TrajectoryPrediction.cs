@@ -4,29 +4,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class TrajectoryPrediction : MonoBehaviour {
-    float velocity;
-    float angle;
-    float radianAngle;
-    float gravity = Mathf.Abs(Physics.gravity.y);
-    [SerializeField] int trajectoryResolution;
-    [SerializeField] BowMain bowMain;
-    
-    LineRenderer lineRenderer;
-    void Start () {
+    private float velocity;
+    private float angle;
+    private float radianAngle;
+    private float gravity = Mathf.Abs(Physics.gravity.y);
+    [SerializeField] private int trajectoryResolution;
+
+    [SerializeField] private BowMain bowMain;
+    private LineRenderer lineRenderer;
+    private void Start () {
         lineRenderer = GetComponent<LineRenderer>();
         Assert.IsNotNull(bowMain);
     }
     private void Update()
     {
-
-        transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, bowMain.transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-        if(bowMain.loadedArrow != null)
-            transform.position = bowMain.loadedArrow.transform.position;
-        if (bowMain.bowPullStrength > bowMain.minimumStrengthToShootArrow)
+        if (bowMain.loadedArrow != null && bowMain.BowPullStrength > bowMain.MinimumStrengthToShootArrow)
         {
             angle = -bowMain.transform.rotation.eulerAngles.x;
-            velocity = bowMain.shootForce * bowMain.bowPullStrength;
+            velocity = bowMain.ShootForce * bowMain.BowPullStrength;
             lineRenderer.enabled = true;
+            transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, bowMain.transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+            transform.position = bowMain.loadedArrow.transform.position;
             RenderTrajectory();
         }
         else

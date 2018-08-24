@@ -2,46 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Assertions;
+using UnityEngine.SceneManagement;
 public class InGameScreen : MonoBehaviour {
-    GameManager gameManager;
-    [SerializeField] GameObject prefabScore;
-    [SerializeField] Vector3 prefabScorePosition;
+    [SerializeField] GameObject prefabScoreText;
+    [SerializeField] Vector3 prefabScoreBasePosition;
     [SerializeField] Vector3 prefabScoreOffset;
     List<GameObject> prefabScoreList = new List<GameObject>();
+
     [SerializeField] GameObject gameOverScreen;
-	// Use this for initialization
-	void Start () {
+
+    GameManager gameManager;
+    private void Start () {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        LevelEvents.ContinueToNextLevel += UpdateScore;
-        LevelEvents.GameOver += EnableGameOverScreen;
+        Assert.IsNotNull(gameManager);
         gameOverScreen.SetActive(false);
+        LevelEvents.AddScore += UpdateScore;
+        LevelEvents.GameOver += EnableGameOverScreen;
     }
-    void UpdateScore()
+    private void UpdateScore()
     {
-        GameObject prefabScoreInstance = Instantiate(prefabScore, this.transform);
-        prefabScoreInstance.transform.position = prefabScorePosition + (prefabScoreOffset * (gameManager.roundNumber - 2));
+        GameObject prefabScoreInstance = Instantiate(prefabScoreText, this.transform);                                  //create a new score text and write the score
+        prefabScoreInstance.transform.position = prefabScoreBasePosition + (prefabScoreOffset * (gameManager.RoundNumber - 1));
         TextMeshProUGUI scoreText = prefabScoreInstance.GetComponent<TextMeshProUGUI>();
-        scoreText.text = gameManager.roundScore[gameManager.roundNumber - 2].ToString();
+        scoreText.text = gameManager.RoundScore[gameManager.RoundNumber - 1].ToString();
         prefabScoreList.Add(prefabScoreInstance);
     }
-    void RetryGame()
+    public void ReturnToMenu(string mainMenu)
+    {
+        SceneManager.LoadScene(mainMenu);
+    }
+    public void RetryGame()
     {
         ClearPrefabScoreList();
         gameOverScreen.SetActive(false);
         LevelEvents.RaiseLevelEvent(LevelEvents.LevelEventType.RetryGame);
     }
-    void ClearPrefabScoreList()
+    private void ClearPrefabScoreList()
     {
         foreach (GameObject prefabScore in prefabScoreList)
             Destroy(prefabScore);
         prefabScoreList.Clear();
     }
-    void EnableGameOverScreen()
+    private void EnableGameOverScreen()
     {
         gameOverScreen.SetActive(true);
     }
     private void OnDestroy() // avoid memory leaks
     {
-        LevelEvents.ContinueToNextLevel -= UpdateScore;
+        LevelEvents.AddScore -= UpdateScore;
+        LevelEvents.GameOver -= EnableGameOverScreen;
     }
 }

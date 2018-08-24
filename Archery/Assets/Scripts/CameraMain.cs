@@ -11,51 +11,47 @@ public class CameraMain : MonoBehaviour {
 
     [SerializeField]BowMain bowMain;
     GameObject activeArrow;
+    bool cameraFollowArrow = false;
 
-    GameManager gameManager;
-	void Start () {
+	private void Start () {
         Assert.IsNotNull(bowMain);
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         Camera camera = GetComponent<Camera>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         initialFOV = camera.fieldOfView;
         BowEvents.LoadArrow += GetActiveArrow;              // get active arrow when arrow is loaded
-        GameStateEvents.SwitchedToLoadArrowPhase += SwitchViewToBehindPlayer; // place camera behind player during the load phase
-        GameStateEvents.SwitchedToShootArrowPhase += SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
+        LevelEvents.ContinueToNextLevel += SwitchViewToBehindPlayer; // place camera behind player during the load phase
+        BowEvents.ShootArrow += SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
 	}
-	
-	void LateUpdate () {
-        switch (gameManager.currentState)
+	private void LateUpdate () {
+        if (cameraFollowArrow)
         {
-            case GameManager.GameState.ShootArrowPhase:
-                transform.position = activeArrow.transform.position + cameraFollowArrowDistanceOffset;
-                transform.rotation = Quaternion.Euler(cameraFollowArrowRotationOffset);
-                break;
-            default:
-                break;
+            transform.position = activeArrow.transform.position + cameraFollowArrowDistanceOffset;
+            transform.rotation = Quaternion.Euler(cameraFollowArrowRotationOffset);
         }
-	}
-    public void SwitchViewToBehindPlayer()
+    }
+    private void SwitchViewToBehindPlayer()
     {
+        cameraFollowArrow = false;
         transform.position = initialPosition;
         transform.rotation = initialRotation;
         Camera camera = GetComponent<Camera>();
         camera.fieldOfView = initialFOV;
     }
-    public void SwitchViewToFollowArrow()
+    private void SwitchViewToFollowArrow()
     {
+        cameraFollowArrow = true;
         Camera camera = GetComponent<Camera>();
         camera.fieldOfView = 80f;
     }
-    public void GetActiveArrow()
+    private void GetActiveArrow()
     {
         activeArrow = bowMain.loadedArrow;
     }
     private void OnDestroy() //avoid memory leaks
     {
         BowEvents.LoadArrow -= GetActiveArrow;              // get active arrow when arrow is loaded
-        GameStateEvents.SwitchedToLoadArrowPhase -= SwitchViewToBehindPlayer;
-        GameStateEvents.SwitchedToShootArrowPhase -= SwitchViewToFollowArrow;
+        LevelEvents.ContinueToNextLevel -= SwitchViewToBehindPlayer; // place camera behind player during the load phase
+        BowEvents.ShootArrow -= SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
     }
 }

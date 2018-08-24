@@ -3,37 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour {
-    const float RAY_LENGTH = 1000f;
-    [SerializeField] Vector3 spawnAreaSize;
-    [SerializeField] GameObject spawnObject;
+    [SerializeField] private Vector3 spawnAreaSize;
+    [SerializeField] private GameObject spawnObject;
     public GameObject currentObjectInstance;
-	void Start () {
+	private void Start () {
         LevelEvents.ContinueToNextLevel += SpawnObject;
         SpawnObject();
 	}
-    public void SpawnObject()
+    private void SpawnObject()
     {
         if (currentObjectInstance != null)
             Destroy(currentObjectInstance);
         RaycastHit hitInfo = GetRandomSpawnHitRayPosition();
-        GameObject spawnObjectInstance = Instantiate(spawnObject, hitInfo.point, Quaternion.identity);
-        spawnObjectInstance.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
-        currentObjectInstance = spawnObjectInstance;
+        currentObjectInstance = Instantiate(spawnObject, hitInfo.point, Quaternion.identity);
+        currentObjectInstance.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
         LevelEvents.RaiseLevelEvent(LevelEvents.LevelEventType.SpawnTarget);
     }
-    RaycastHit GetRandomSpawnHitRayPosition()
+    private RaycastHit GetRandomSpawnHitRayPosition()
     {
         Vector3 generatedRayPosition = transform.position + new Vector3(Random.Range(-spawnAreaSize.x / 2, spawnAreaSize.x / 2), Random.Range(-spawnAreaSize.y / 2, spawnAreaSize.y / 2), Random.Range(-spawnAreaSize.z / 2, spawnAreaSize.z / 2));
         RaycastHit hit;
         Physics.Raycast(generatedRayPosition, -Vector3.up, out hit, Mathf.Infinity);
         return hit;
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawCube(transform.position, spawnAreaSize);
-    }
     private void OnDestroy()
     {
         LevelEvents.ContinueToNextLevel -= SpawnObject;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawCube(transform.position, spawnAreaSize);
     }
 }

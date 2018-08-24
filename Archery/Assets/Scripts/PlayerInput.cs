@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
-    Vector2 startPos;
-    BowMain bowMain;
-    Vector2 touchVector;
-    GameManager gameManager;
-	void Start () {
+    private Vector2 startTouchPosition;
+    private Vector2 touchVector;
+
+    private BowMain bowMain;
+    private GameManager gameManager;
+    private void Start () {
         bowMain = GetComponent<BowMain>();
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 	}
 
-    void Update()
+    private void Update()
     {
         if (Input.touchCount > 0)
         {
@@ -20,25 +21,25 @@ public class PlayerInput : MonoBehaviour {
             switch (touch.phase)
             {
                 case TouchPhase.Began:
-                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase)
                     {
-                        startPos = touch.position;
+                        startTouchPosition = touch.position;
                         bowMain.LoadArrow();
                     }
                     break;
                 case TouchPhase.Moved:
-                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase && bowMain.loadedArrow != null)
+                    if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase && bowMain.loadedArrow != null)
                     {
-                        touchVector = touch.position - startPos;
-                        bowMain.RotateBowHorizontal(touch.position.x - startPos.x);
-                        bowMain.RotateBowVertical(touch.position.y - startPos.y);
-                        bowMain.PullArrow(startPos.y - touch.position.y);
+                        touchVector = touch.position - startTouchPosition;
+                        bowMain.RotateBowHorizontal(touch.position.x - startTouchPosition.x);
+                        bowMain.RotateBowVertical(touch.position.y - startTouchPosition.y);
+                        bowMain.PullArrow(startTouchPosition.y - touch.position.y);
                     }
                     break;
                 case TouchPhase.Ended:
-                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase)
                     {
-                        touchVector = touch.position - startPos;
+                        touchVector = touch.position - startTouchPosition;
                         bowMain.ShootArrow();
                     }
                     break;

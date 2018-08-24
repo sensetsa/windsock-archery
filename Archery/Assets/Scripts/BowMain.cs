@@ -3,34 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class BowMain : MonoBehaviour {
-    public float minimumStrengthToShootArrow = 0.2f;
-    [Range(0f, 1f)] public float bowPullStrength = 0f;
-    [SerializeField] float bowPullStrengthMultiplier = 100f; //used to normalize pull vector to 0-1 range
+    [SerializeField] float maxBowHorizontalRotation = 70f;
+    [SerializeField] float maxBowVerticalRotation = 70f;
+    [SerializeField] float minimumStrengthToShootArrow = 0.2f;
+    public float MinimumStrengthToShootArrow { get { return minimumStrengthToShootArrow; } }
+    float bowPullStrength = 0f;
+    public float BowPullStrength { get { return bowPullStrength; } set { bowPullStrength = value; } }
+    [SerializeField] float shootForce = 60f;
+    public float ShootForce { get { return shootForce; } }
+    [SerializeField] float bowPullStrengthDamp = 100f; //used to normalize pull vector to 0-1 range
     [SerializeField] float rotateDamp = 5f; //multiplier used to reduce bow rotation
-    public float shootForce = 30f;
+    
     [SerializeField] GameObject prefabArrow;
     [HideInInspector] public GameObject loadedArrow;
 
-    VariableTransformReference variableTransformReference;
-
     Vector3 initialPosition;
     Quaternion initialRotation;
+
+    VariableTransformReference variableTransformReference;
     private void Start()
     {
         initialPosition = transform.position;
         initialRotation = transform.rotation;
-        Assert.IsNotNull(prefabArrow);
         variableTransformReference = GetComponent<VariableTransformReference>();
-
-        LevelEvents.ContinueToNextLevel += ResetTransform;
+        Assert.IsNotNull(prefabArrow);
+        LevelEvents.ContinueToNextLevel += ResetTransform;  //reset rotation of bow after shoot phase
     }
     void Update () {
         if(variableTransformReference != null)
-            variableTransformReference.ReferenceValue = bowPullStrength;
+            variableTransformReference.ReferenceValue = BowPullStrength;
     }
     public void ShootArrow()
     {
-        if (!(bowPullStrength > minimumStrengthToShootArrow))
+        if (!(BowPullStrength > MinimumStrengthToShootArrow))   //prevent shooting if shooting strength is below minimum or no arrow is loaded.
             return;
         if (loadedArrow == null)
             return;
@@ -38,13 +43,13 @@ public class BowMain : MonoBehaviour {
         loadedArrow.transform.parent = null;
         Rigidbody rigidbody = loadedArrow.GetComponent<Rigidbody>();
         rigidbody.constraints = RigidbodyConstraints.None;
-        rigidbody.AddForce(transform.forward * shootForce * bowPullStrength, ForceMode.Impulse);
+        rigidbody.AddForce(transform.forward * ShootForce * BowPullStrength, ForceMode.Impulse);
         ArrowMain arrowMain = loadedArrow.GetComponent<ArrowMain>();
         arrowMain.currentState = ArrowMain.ArrowState.ShootArrow;
         arrowMain.variableTransform.enabled = false;
-        bowPullStrength = 0;
-        BowEvents.RaiseBowEvent(BowEvents.BowEventType.ShootArrow);
+        BowPullStrength = 0;
         loadedArrow = null;
+        BowEvents.RaiseBowEvent(BowEvents.BowEventType.ShootArrow);
     }
     public void LoadArrow()
     {
@@ -60,21 +65,17 @@ public class BowMain : MonoBehaviour {
     }
     public void PullArrow(float pullStrength)
     {
-        bowPullStrength = Mathf.Clamp((pullStrength / bowPullStrengthMultiplier), 0, 1);
+        BowPullStrength = Mathf.Clamp((pullStrength / bowPullStrengthDamp), 0, 1);
     }
     public void RotateBowHorizontal(float touchVector)
     {
-        transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, Mathf.Clamp(touchVector / rotateDamp, -70, 70) * -1, transform.rotation.eulerAngles.z));
+        transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, Mathf.Clamp(touchVector / rotateDamp, -maxBowHorizontalRotation, maxBowHorizontalRotation) * -1, transform.rotation.eulerAngles.z));
     }
     public void RotateBowVertical(float touchVector)
     {
-        transform.rotation = Quaternion.Euler(new Vector3(Mathf.Clamp(touchVector / rotateDamp, -70, 70), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+        transform.rotation = Quaternion.Euler(new Vector3(Mathf.Clamp(touchVector / rotateDamp, -maxBowVerticalRotation, maxBowVerticalRotation), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
     }
-    private void OnDrawGizmos()
-    {
-        Debug.DrawLine(transform.position, transform.position + transform.forward * 10, Color.red);
-    }
-    public void ResetTransform()
+    private void ResetTransform()
     {
         transform.rotation = initialRotation;
         transform.position = initialPosition;
@@ -82,5 +83,9 @@ public class BowMain : MonoBehaviour {
     private void OnDestroy()//prevent memory leaks
     {
         LevelEvents.ContinueToNextLevel -= ResetTransform;
+    }
+    private void OnDrawGizmos()
+    {
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 10, Color.red);
     }
 }
