@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 public class BowMain : MonoBehaviour {
-    [SerializeField] float maxBowHorizontalRotation = 70f;
-    [SerializeField] float maxBowVerticalRotation = 70f;
-    [SerializeField] float minimumStrengthToShootArrow = 0.2f;
+    [SerializeField] private float maxBowHorizontalRotation = 70f;
+    [SerializeField] private float maxBowVerticalRotation = 70f;
+    [SerializeField] private float minimumStrengthToShootArrow = 0.2f;
     public float MinimumStrengthToShootArrow { get { return minimumStrengthToShootArrow; } }
-    float bowPullStrength = 0f;
+    private float bowPullStrength = 0f;
     public float BowPullStrength { get { return bowPullStrength; } set { bowPullStrength = value; } }
-    [SerializeField] float shootForce = 60f;
+    [SerializeField] private float shootForce = 60f;
     public float ShootForce { get { return shootForce; } }
-    [SerializeField] float bowPullStrengthDamp = 100f; //used to normalize pull vector to 0-1 range
-    [SerializeField] float rotateDamp = 5f; //multiplier used to reduce bow rotation
+    [SerializeField] private float bowPullStrengthDamp = 100f; //used to normalize pull vector to 0-1 range
+    [SerializeField] private float rotateDamp = 5f; //multiplier used to reduce bow rotation
     
-    [SerializeField] GameObject prefabArrow;
+    [SerializeField] private GameObject prefabArrow;
     [HideInInspector] public GameObject loadedArrow;
 
-    Vector3 initialPosition;
-    Quaternion initialRotation;
+    private Vector3 initialPosition;
+    private Quaternion initialRotation;
 
     VariableTransformReference variableTransformReference;
     private void Start()
@@ -29,7 +29,7 @@ public class BowMain : MonoBehaviour {
         Assert.IsNotNull(prefabArrow);
         LevelEvents.ContinueToNextLevel += ResetTransform;  //reset rotation of bow after shoot phase
     }
-    void Update () {
+    private void Update () {
         if(variableTransformReference != null)
             variableTransformReference.ReferenceValue = BowPullStrength;
     }

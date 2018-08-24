@@ -11,14 +11,22 @@ public class InGameScreen : MonoBehaviour {
     List<GameObject> prefabScoreList = new List<GameObject>();
 
     [SerializeField] GameObject gameOverScreen;
+    [SerializeField] GameObject quickButtonScreen;
+    [SerializeField] TextMeshProUGUI gameOverScore;
 
     GameManager gameManager;
     private void Start () {
+        Assert.IsNotNull(gameOverScore);
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         Assert.IsNotNull(gameManager);
         gameOverScreen.SetActive(false);
+        Assert.IsNotNull(gameOverScreen);
+        quickButtonScreen.SetActive(false);
+        Assert.IsNotNull(quickButtonScreen);
         LevelEvents.AddScore += UpdateScore;
         LevelEvents.GameOver += EnableGameOverScreen;
+        LevelEvents.GameOver += SetGameOverScore;
+        LevelEvents.ContinueToNextLevel += DisableQuickButtonScreenOnRetry;
     }
     private void UpdateScore()
     {
@@ -44,13 +52,35 @@ public class InGameScreen : MonoBehaviour {
             Destroy(prefabScore);
         prefabScoreList.Clear();
     }
-    private void EnableGameOverScreen()
+    public void EnableGameOverScreen()
     {
         gameOverScreen.SetActive(true);
+    }
+    public void EnableDisableQuickButtonMenu()
+    {
+        if (quickButtonScreen.activeSelf == false)
+            quickButtonScreen.SetActive(true);
+        else
+            quickButtonScreen.SetActive(false);
+    }
+    private void DisableQuickButtonScreenOnRetry()
+    {
+        quickButtonScreen.SetActive(false);
+    }
+    private void SetGameOverScore()
+    {
+        int totalScore = 0;
+        foreach(int score in gameManager.RoundScore)
+        {
+            totalScore += score;
+        }
+        gameOverScore.text = totalScore.ToString();
     }
     private void OnDestroy() // avoid memory leaks
     {
         LevelEvents.AddScore -= UpdateScore;
         LevelEvents.GameOver -= EnableGameOverScreen;
+        LevelEvents.GameOver -= SetGameOverScore;
+        LevelEvents.ContinueToNextLevel -= DisableQuickButtonScreenOnRetry;
     }
 }
