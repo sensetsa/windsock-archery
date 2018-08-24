@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour {
     const float RAY_LENGTH = 1000f;
     [SerializeField] Vector3 spawnAreaSize;
     [SerializeField] GameObject spawnObject;
-    GameObject currentObjectInstance;
+    public GameObject currentObjectInstance;
 	void Start () {
         LevelEvents.ContinueToNextLevel += SpawnObject;
         SpawnObject();
@@ -19,6 +19,7 @@ public class SpawnManager : MonoBehaviour {
         GameObject spawnObjectInstance = Instantiate(spawnObject, hitInfo.point, Quaternion.identity);
         spawnObjectInstance.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
         currentObjectInstance = spawnObjectInstance;
+        LevelEvents.RaiseLevelEvent(LevelEvents.LevelEventType.SpawnTarget);
     }
     RaycastHit GetRandomSpawnHitRayPosition()
     {

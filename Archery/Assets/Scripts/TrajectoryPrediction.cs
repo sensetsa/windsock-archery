@@ -18,11 +18,10 @@ public class TrajectoryPrediction : MonoBehaviour {
     }
     private void Update()
     {
-        if (bowMain.loadedArrow == null)
-            return;
 
         transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, bowMain.transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
-        transform.position = bowMain.loadedArrow.transform.position;
+        if(bowMain.loadedArrow != null)
+            transform.position = bowMain.loadedArrow.transform.position;
         if (bowMain.bowPullStrength > bowMain.minimumStrengthToShootArrow)
         {
             angle = -bowMain.transform.rotation.eulerAngles.x;

@@ -23,7 +23,7 @@ public class TargetMain : MonoBehaviour {
             return;
         float addScore = (scoreRange - Vector3.Distance(collision.contacts[0].point, targetCenter.transform.position)) * scoreMultiplier;
         if (Mathf.Round(addScore) >= 0)
-            gameManager.GameScore += Mathf.Round(addScore);
+            gameManager.AddScore((int)Mathf.Round(addScore));
         isScorable = false;
     }
     public void ResetIsScorable()

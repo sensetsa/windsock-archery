@@ -5,9 +5,13 @@ using System;
 public static class LevelEvents {
     public enum LevelEventType
     {
-        ContinueToNextLevel
+        ContinueToNextLevel, SpawnTarget, AddScore, GameOver, RetryGame
     }
     public static event Action ContinueToNextLevel;
+    public static event Action GameOver;
+    public static event Action SpawnTarget;
+    public static event Action AddScore;
+    public static event Action RetryGame;
     public static void RaiseLevelEvent(LevelEventType levelEventType)
     {
         switch (levelEventType)
@@ -15,6 +19,22 @@ public static class LevelEvents {
             case (LevelEventType.ContinueToNextLevel):
                 if(ContinueToNextLevel != null)
                     ContinueToNextLevel();
+                break;
+            case (LevelEventType.SpawnTarget):
+                if (SpawnTarget != null)
+                    SpawnTarget();
+                break;
+            case (LevelEventType.AddScore):
+                if (AddScore != null)
+                    AddScore();
+                break;
+            case (LevelEventType.GameOver):
+                if(GameOver != null)
+                    GameOver();
+                break;
+            case (LevelEventType.RetryGame):
+                if (RetryGame != null)
+                    RetryGame();
                 break;
         }
         

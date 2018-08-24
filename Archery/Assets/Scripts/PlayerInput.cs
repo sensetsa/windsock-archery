@@ -27,7 +27,7 @@ public class PlayerInput : MonoBehaviour {
                     }
                     break;
                 case TouchPhase.Moved:
-                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase)
+                    if (gameManager.currentState == GameManager.GameState.PullArrowPhase && bowMain.loadedArrow != null)
                     {
                         touchVector = touch.position - startPos;
                         bowMain.RotateBowHorizontal(touch.position.x - startPos.x);

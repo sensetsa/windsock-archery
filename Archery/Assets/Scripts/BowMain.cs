@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 public class BowMain : MonoBehaviour {
     public float minimumStrengthToShootArrow = 0.2f;
-    [HideInInspector][Range(0f, 1f)] public float bowPullStrength = 0f;
+    [Range(0f, 1f)] public float bowPullStrength = 0f;
     [SerializeField] float bowPullStrengthMultiplier = 100f; //used to normalize pull vector to 0-1 range
     [SerializeField] float rotateDamp = 5f; //multiplier used to reduce bow rotation
     public float shootForce = 30f;
