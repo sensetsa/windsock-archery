@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour {
     private Vector2 startTouchPosition;
-    private Vector2 touchVector;
 
     private BowMain bowMain;
     private GameManager gameManager;
@@ -30,7 +29,6 @@ public class PlayerInput : MonoBehaviour {
                 case TouchPhase.Moved:
                     if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase && bowMain.loadedArrow != null)
                     {
-                        touchVector = touch.position - startTouchPosition;
                         bowMain.RotateBowHorizontal(touch.position.x - startTouchPosition.x);
                         bowMain.RotateBowVertical(touch.position.y - startTouchPosition.y);
                         bowMain.PullArrow(startTouchPosition.y - touch.position.y);
@@ -39,7 +37,6 @@ public class PlayerInput : MonoBehaviour {
                 case TouchPhase.Ended:
                     if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase)
                     {
-                        touchVector = touch.position - startTouchPosition;
                         bowMain.ShootArrow();
                     }
                     break;
