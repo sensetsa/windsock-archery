@@ -9,6 +9,6 @@ public class TargetDistanceOverlayUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if(targetDistanceText != null)
-            targetDistanceText.text = targetDistanceFromPlayer.ToString() + "m";
+            targetDistanceText.text = Mathf.Round(targetDistanceFromPlayer).ToString() + "m";
 	}
 }

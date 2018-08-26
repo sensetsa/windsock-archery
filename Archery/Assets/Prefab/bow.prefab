@@ -192,7 +192,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1395305103098718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 6, z: -17.5}
+  m_LocalPosition: {x: 0, y: 76.52, z: -16.78}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4165943058240186}
@@ -474,11 +474,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5567e3b4fcf8b274ca6616805346af42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxBowHorizontalRotation: 70
+  maxBowHorizontalRotation: 40
   maxBowVerticalRotation: 70
   minimumStrengthToShootArrow: 0.2
   shootForce: 40
-  bowPullStrengthDamp: 100
+  bowPullStrengthDamp: 400
   rotateDamp: 5
   prefabArrow: {fileID: 1174032146815138, guid: 1c94e9dd4fb094a41ac4225a9acdb60b,
     type: 2}
@@ -526,8 +526,8 @@ MonoBehaviour:
     pitch: 0.5
     loop: 1
   - audioClip: {fileID: 8300000, guid: 09fc3ba869f59a446a7b298adf2c741b, type: 3}
-    volume: 0.6
-    pitch: 0.5
+    volume: 1
+    pitch: 1
     loop: 0
 --- !u!137 &137316117534346742
 SkinnedMeshRenderer:

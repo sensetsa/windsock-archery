@@ -29,9 +29,9 @@ public class PlayerInput : MonoBehaviour {
                 case TouchPhase.Moved:
                     if (gameManager != null && gameManager.currentState == GameManager.GameState.PullArrowPhase && bowMain.loadedArrow != null)
                     {
-                        bowMain.RotateBowHorizontal(touch.position.x - startTouchPosition.x);
-                        bowMain.RotateBowVertical(touch.position.y - startTouchPosition.y);
-                        bowMain.PullArrow(startTouchPosition.y - touch.position.y);
+                        bowMain.RotateBowHorizontal((touch.position.x - startTouchPosition.x) / Screen.width);
+                        bowMain.RotateBowVertical((touch.position.y - startTouchPosition.y) / Screen.height);
+                        bowMain.PullArrow((startTouchPosition.y - touch.position.y) / Screen.height);
                     }
                     break;
                 case TouchPhase.Ended:

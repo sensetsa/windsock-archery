@@ -19,7 +19,7 @@ public class TrajectoryPrediction : MonoBehaviour {
     }
     private void Update()
     {
-        if (gameManager == null || gameManager.RoundNumber != 1)
+        if (gameManager == null || gameManager.RoundNumber >= 6)
         {
             lineRenderer.enabled = false;
             return;

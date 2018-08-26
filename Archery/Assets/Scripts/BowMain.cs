@@ -11,9 +11,10 @@ public class BowMain : MonoBehaviour {
     public float BowPullStrength { get { return bowPullStrength; } set { bowPullStrength = value; } }
     [SerializeField] private float shootForce = 60f;
     public float ShootForce { get { return shootForce; } }
-    [SerializeField] private float bowPullStrengthDamp = 100f; //used to normalize pull vector to 0-1 range
-    [SerializeField] private float rotateDamp = 5f; //multiplier used to reduce bow rotation
-    
+    [SerializeField] private float bowPullStrengthMultiplier = 10f; //used to normalize pull vector to 0-1 range
+    [SerializeField] private float rotateHorizontalMultiplier = 40f; //multiplier used to reduce bow rotation
+    [SerializeField] private float rotateVerticalMultiplier = 40f; //multiplier used to reduce bow rotation
+
     [SerializeField] private GameObject prefabArrow;
     [HideInInspector] public GameObject loadedArrow;
 
@@ -65,15 +66,15 @@ public class BowMain : MonoBehaviour {
     }
     public void PullArrow(float pullStrength)
     {
-        BowPullStrength = Mathf.Clamp((pullStrength / bowPullStrengthDamp), 0, 1);
+        BowPullStrength = Mathf.Clamp(pullStrength * bowPullStrengthMultiplier, 0, 1);
     }
     public void RotateBowHorizontal(float touchVector)
     {
-        transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, Mathf.Clamp(touchVector / rotateDamp, -maxBowHorizontalRotation, maxBowHorizontalRotation) * -1, transform.rotation.eulerAngles.z));
+        transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, Mathf.Clamp(touchVector * rotateHorizontalMultiplier, -maxBowHorizontalRotation, maxBowHorizontalRotation) * -1, transform.rotation.eulerAngles.z));
     }
     public void RotateBowVertical(float touchVector)
     {
-        transform.rotation = Quaternion.Euler(new Vector3(Mathf.Clamp(touchVector / rotateDamp, -maxBowVerticalRotation, maxBowVerticalRotation), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
+        transform.rotation = Quaternion.Euler(new Vector3(Mathf.Clamp(touchVector * rotateVerticalMultiplier, -maxBowVerticalRotation, 0), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z));
     }
     private void ResetTransform()
     {

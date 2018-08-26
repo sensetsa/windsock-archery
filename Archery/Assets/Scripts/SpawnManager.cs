@@ -8,8 +8,7 @@ public class SpawnManager : MonoBehaviour {
     [HideInInspector] public GameObject currentObjectInstance;
 
     [SerializeField] private GameObject targetDistanceOverlayUIPrefab;
-    [SerializeField] private GameObject currentTargetDistanceOverlayUI;
-    [SerializeField] private Vector3 targetDistanceOverlayOffset;
+    private GameObject currentTargetDistanceOverlayUI;
 
     
 	private void Start () {
@@ -28,7 +27,7 @@ public class SpawnManager : MonoBehaviour {
         GameObject targetDistanceOverlayUIInstance = Instantiate(targetDistanceOverlayUIPrefab, currentObjectInstance.transform);
         TargetDistanceOverlayUI targetDistanceOverlayUI = targetDistanceOverlayUIInstance.GetComponent<TargetDistanceOverlayUI>();
         targetDistanceOverlayUI.targetDistanceFromPlayer = GetTargetDistanceToPlayer();
-        targetDistanceOverlayUI.targetDistanceTextObject.transform.position = camera.WorldToScreenPoint(currentObjectInstance.transform.position) + targetDistanceOverlayOffset;
+        targetDistanceOverlayUI.targetDistanceTextObject.transform.position = camera.WorldToScreenPoint(currentObjectInstance.transform.position);
         currentTargetDistanceOverlayUI = targetDistanceOverlayUIInstance;
     }
     private void DestroySpawnTargetDistanceOverlayUI()

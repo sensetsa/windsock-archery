@@ -8,8 +8,8 @@ public class CameraMain : MonoBehaviour {
     float initialFOV;
     [SerializeField] Vector3 cameraFollowArrowDistanceOffset = Vector3.zero;
     [SerializeField] Vector3 cameraFollowArrowRotationOffset = Vector3.zero;
-
-    [SerializeField]BowMain bowMain;
+    [SerializeField] BowMain bowMain;
+    [SerializeField] float lerpFollowSpeed = 0.8f;
     GameObject activeArrow;
     bool cameraFollowArrow = false;
 
@@ -26,8 +26,11 @@ public class CameraMain : MonoBehaviour {
 	private void LateUpdate () {
         if (cameraFollowArrow)
         {
-            transform.position = activeArrow.transform.position + cameraFollowArrowDistanceOffset;
-            transform.rotation = Quaternion.Euler(cameraFollowArrowRotationOffset);
+            if(transform.position.z > activeArrow.transform.position.z + cameraFollowArrowDistanceOffset.z)
+            {
+                return;
+            }
+            transform.position = Vector3.Lerp(transform.position, activeArrow.transform.position + cameraFollowArrowDistanceOffset, lerpFollowSpeed * Time.deltaTime);
         }
     }
     private void SwitchViewToBehindPlayer()
@@ -43,6 +46,7 @@ public class CameraMain : MonoBehaviour {
         cameraFollowArrow = true;
         Camera camera = GetComponent<Camera>();
         camera.fieldOfView = 80f;
+        transform.rotation = Quaternion.Euler(cameraFollowArrowRotationOffset);
     }
     private void GetActiveArrow()
     {

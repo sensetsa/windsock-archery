@@ -12,27 +12,44 @@ public class InGameScreen : MonoBehaviour {
 
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] GameObject quickButtonScreen;
+    [SerializeField] GameObject scoreBoard;
     [SerializeField] TextMeshProUGUI gameOverScore;
+    [SerializeField] TextMeshProUGUI rotationUIText;
+    [SerializeField] TextMeshProUGUI pullStrengthUIText;
 
     GameManager gameManager;
-
+    BowMain bowMain;
     private void Start () {
-        Assert.IsNotNull(gameOverScore);
+        
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        Assert.IsNotNull(gameManager);
+        bowMain = GameObject.FindGameObjectWithTag("Player").GetComponent<BowMain>();
         gameOverScreen.SetActive(false);
-        Assert.IsNotNull(gameOverScreen);
         quickButtonScreen.SetActive(false);
+        Assert.IsNotNull(bowMain);
+        Assert.IsNotNull(gameOverScore);
+        Assert.IsNotNull(gameManager);
+        Assert.IsNotNull(gameOverScreen);
         Assert.IsNotNull(quickButtonScreen);
+        Assert.IsNotNull(rotationUIText);
+        Assert.IsNotNull(pullStrengthUIText);
         LevelEvents.AddScore += UpdateScore;
         LevelEvents.GameOver += EnableGameOverScreen;
         LevelEvents.GameOver += SetGameOverScore;
         LevelEvents.ContinueToNextLevel += DisableQuickButtonScreenOnRetry;
     }
+    private void Update()
+    {
+        int rotationUIAngle = (360 - (int)Mathf.Round(bowMain.transform.localRotation.eulerAngles.x));
+        if(rotationUIAngle != 360)
+            rotationUIText.text = rotationUIAngle.ToString();
+        else
+            rotationUIText.text = "0";
+        pullStrengthUIText.text = (Mathf.Round(bowMain.BowPullStrength * 100)).ToString();
+    }
     private void UpdateScore()
     {
-        GameObject prefabScoreInstance = Instantiate(prefabScoreText, this.transform);                                  //create a new score text and write the score
-        prefabScoreInstance.transform.position = prefabScoreBasePosition + (prefabScoreOffset * (gameManager.RoundNumber - 1));
+        GameObject prefabScoreInstance = Instantiate(prefabScoreText, scoreBoard.transform);                                  //create a new score text and write the score
+        prefabScoreInstance.transform.localPosition = prefabScoreBasePosition + (prefabScoreOffset * (gameManager.RoundNumber - 1));
         TextMeshProUGUI scoreText = prefabScoreInstance.GetComponent<TextMeshProUGUI>();
         scoreText.text = gameManager.RoundScore[gameManager.RoundNumber - 1].ToString();
         prefabScoreList.Add(prefabScoreInstance);
