@@ -9,15 +9,21 @@ public class TrajectoryPrediction : MonoBehaviour {
     private float radianAngle;
     private float gravity = Mathf.Abs(Physics.gravity.y);
     [SerializeField] private int trajectoryResolution;
-
     [SerializeField] private BowMain bowMain;
     private LineRenderer lineRenderer;
+    private GameManager gameManager;
     private void Start () {
         lineRenderer = GetComponent<LineRenderer>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         Assert.IsNotNull(bowMain);
     }
     private void Update()
     {
+        if (gameManager == null || gameManager.RoundNumber != 1)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
         if (bowMain.loadedArrow != null && bowMain.BowPullStrength > bowMain.MinimumStrengthToShootArrow)
         {
             angle = -bowMain.transform.rotation.eulerAngles.x;

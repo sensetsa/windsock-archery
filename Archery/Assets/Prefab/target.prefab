@@ -117,7 +117,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1574976442214822}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 56.01407, y: 72.75306, z: 22.535484}
+  m_LocalPosition: {x: -12.234596, y: 72.75306, z: 38.550438}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4898814254134042}
@@ -432,6 +432,7 @@ MonoBehaviour:
   scoreMultiplier: 10
   scoreRange: 1.35
   hitVFX: {fileID: 1690004458264442, guid: 61b373430c01b2740a9e6b055707117b, type: 2}
+  scoreVFX: {fileID: 1555808820187938, guid: 2e0f308aa2a70744dbca1b634404469d, type: 2}
 --- !u!114 &114894821864460424
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -6,7 +6,8 @@ public class TargetMain : MonoBehaviour {
     [SerializeField] private Transform targetCenter;
     [SerializeField] private float scoreMultiplier = 10;
     [SerializeField] private float scoreRange = 1;
-    [SerializeField] GameObject hitVFX;
+    [SerializeField] private GameObject hitVFX;
+    [SerializeField] private GameObject scoreVFX;
     private bool isScorable = true;
     private GameManager gameManager;
     private void Start()
@@ -18,12 +19,14 @@ public class TargetMain : MonoBehaviour {
     {
         if (!isScorable || gameManager == null)    //ensure addscore only happens once due to collision point bug
             return;
-        GameObject vfxInstance = Instantiate(hitVFX, collision.contacts[0].point, Quaternion.identity);
+        GameObject vfxInstance = Instantiate(hitVFX, collision.contacts[0].point, Quaternion.identity); //play VFX when arrow hits
         StartCoroutine(VFXInstanceHandler(vfxInstance));
         float addScore = (scoreRange - Vector3.Distance(collision.contacts[0].point, targetCenter.transform.position)) * scoreMultiplier;
         if (Mathf.Round(addScore) > 0) // must add score first before raising event
         {
             gameManager.AddScore((int)Mathf.Round(addScore));
+            WorldSpaceScoreUI scoreInstance =  Instantiate(scoreVFX, collision.contacts[0].point, Quaternion.identity).GetComponent<WorldSpaceScoreUI>(); //play score VFX when arrow hits
+            scoreInstance.ScoreText = ((int)Mathf.Round(addScore)).ToString();
         }
         else
         {

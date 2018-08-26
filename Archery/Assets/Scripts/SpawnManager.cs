@@ -5,11 +5,37 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour {
     [SerializeField] private Vector3 spawnAreaSize;
     [SerializeField] private GameObject spawnObject;
-    public GameObject currentObjectInstance;
+    [HideInInspector] public GameObject currentObjectInstance;
+
+    [SerializeField] private GameObject targetDistanceOverlayUIPrefab;
+    [SerializeField] private GameObject currentTargetDistanceOverlayUI;
+    [SerializeField] private Vector3 targetDistanceOverlayOffset;
+
+    
 	private void Start () {
         LevelEvents.ContinueToNextLevel += SpawnObject;
+        BowEvents.ShootArrow += DestroySpawnTargetDistanceOverlayUI;
         SpawnObject();
 	}
+    private float GetTargetDistanceToPlayer()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        return Vector3.Distance(currentObjectInstance.transform.position, player.transform.position);
+    }
+    private void SpawnTargetDistanceOverlayUI()
+    {
+        Camera camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        GameObject targetDistanceOverlayUIInstance = Instantiate(targetDistanceOverlayUIPrefab, currentObjectInstance.transform);
+        TargetDistanceOverlayUI targetDistanceOverlayUI = targetDistanceOverlayUIInstance.GetComponent<TargetDistanceOverlayUI>();
+        targetDistanceOverlayUI.targetDistanceFromPlayer = GetTargetDistanceToPlayer();
+        targetDistanceOverlayUI.targetDistanceTextObject.transform.position = camera.WorldToScreenPoint(currentObjectInstance.transform.position) + targetDistanceOverlayOffset;
+        currentTargetDistanceOverlayUI = targetDistanceOverlayUIInstance;
+    }
+    private void DestroySpawnTargetDistanceOverlayUI()
+    {
+        Destroy(currentTargetDistanceOverlayUI);
+        currentTargetDistanceOverlayUI = null;
+    }
     private void SpawnObject()
     {
         if (currentObjectInstance != null)
@@ -17,6 +43,7 @@ public class SpawnManager : MonoBehaviour {
         RaycastHit hitInfo = GetRandomSpawnHitRayPosition();
         currentObjectInstance = Instantiate(spawnObject, hitInfo.point, Quaternion.identity);
         currentObjectInstance.transform.LookAt(GameObject.FindGameObjectWithTag("Player").transform);
+        SpawnTargetDistanceOverlayUI();
         LevelEvents.RaiseLevelEvent(LevelEvents.LevelEventType.SpawnTarget);
     }
     private RaycastHit GetRandomSpawnHitRayPosition()
@@ -29,6 +56,7 @@ public class SpawnManager : MonoBehaviour {
     private void OnDestroy()
     {
         LevelEvents.ContinueToNextLevel -= SpawnObject;
+        BowEvents.ShootArrow -= DestroySpawnTargetDistanceOverlayUI;
     }
     private void OnDrawGizmos()
     {

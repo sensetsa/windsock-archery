@@ -15,6 +15,7 @@ public class InGameScreen : MonoBehaviour {
     [SerializeField] TextMeshProUGUI gameOverScore;
 
     GameManager gameManager;
+
     private void Start () {
         Assert.IsNotNull(gameOverScore);
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();

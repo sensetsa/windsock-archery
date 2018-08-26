@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 public class GameManager : MonoBehaviour {
-    private float targetDistanceToPlayer;
     [SerializeField] private float secondsBeforeContinueToNextLevel = 2;
     private int[] roundScore = new int[10];
     public int[] RoundScore { get { return roundScore; } }
@@ -21,15 +20,8 @@ public class GameManager : MonoBehaviour {
         }
         BowEvents.ShootArrow += ChangeToShootArrowPhase;
         BowEvents.LandArrow += WaitForSecondsContinueToNextLevel;
-        LevelEvents.SpawnTarget += GetTargetDistanceToPlayer;
         LevelEvents.RetryGame += PrepareNewGame;
 	}
-    private void GetTargetDistanceToPlayer() // TODO show distance of target to player
-    {
-        SpawnManager spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        targetDistanceToPlayer = Vector3.Distance(spawnManager.currentObjectInstance.transform.position, player.transform.position);
-    }
     private void WaitForSecondsContinueToNextLevel()
     {
         StartCoroutine(WaitForSecondsContinueToNextLevelEnumerator());
@@ -75,7 +67,6 @@ public class GameManager : MonoBehaviour {
     {
         BowEvents.ShootArrow -= ChangeToShootArrowPhase;
         BowEvents.LandArrow -= WaitForSecondsContinueToNextLevel;
-        LevelEvents.SpawnTarget -= GetTargetDistanceToPlayer;
         LevelEvents.RetryGame -= PrepareNewGame;
     }
 }
