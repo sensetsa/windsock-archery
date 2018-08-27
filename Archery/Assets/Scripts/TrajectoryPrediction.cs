@@ -19,11 +19,8 @@ public class TrajectoryPrediction : MonoBehaviour {
     }
     private void Update()
     {
-        if (gameManager == null || gameManager.RoundNumber >= 6)
-        {
-            lineRenderer.enabled = false;
+        if (gameManager == null)
             return;
-        }
         if (bowMain.loadedArrow != null && bowMain.BowPullStrength > bowMain.MinimumStrengthToShootArrow)
         {
             angle = -bowMain.transform.rotation.eulerAngles.x;
@@ -34,9 +31,7 @@ public class TrajectoryPrediction : MonoBehaviour {
             RenderTrajectory();
         }
         else
-        {
             lineRenderer.enabled = false;
-        }
     }
     private void RenderTrajectory()
     {

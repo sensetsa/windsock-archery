@@ -12,7 +12,7 @@ public class PlayerInput : MonoBehaviour {
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 	}
 
-    private void Update()
+    private void LateUpdate()
     {
         if (Input.touchCount > 0)
         {

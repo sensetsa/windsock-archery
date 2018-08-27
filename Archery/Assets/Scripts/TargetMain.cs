@@ -21,12 +21,14 @@ public class TargetMain : MonoBehaviour {
             return;
         GameObject vfxInstance = Instantiate(hitVFX, collision.contacts[0].point, Quaternion.identity); //play VFX when arrow hits
         StartCoroutine(VFXInstanceHandler(vfxInstance));
-        float addScore = (scoreRange - Vector3.Distance(collision.contacts[0].point, targetCenter.transform.position)) * scoreMultiplier;
-        if (Mathf.Round(addScore) > 0) // must add score first before raising event
+        int addScore = (int)Mathf.Round((scoreRange - Vector3.Distance(collision.contacts[0].point, targetCenter.transform.position)) * scoreMultiplier);
+        if (addScore > 0) // must add score first before raising event
         {
-            gameManager.AddScore((int)Mathf.Round(addScore));
+            if (addScore > 10)
+                addScore = 10;
+            gameManager.AddScore(addScore);
             WorldSpaceScoreUI scoreInstance =  Instantiate(scoreVFX, collision.contacts[0].point, Quaternion.identity).GetComponent<WorldSpaceScoreUI>(); //play score VFX when arrow hits
-            scoreInstance.ScoreText = ((int)Mathf.Round(addScore)).ToString();
+            scoreInstance.ScoreText = (addScore).ToString();
         }
         else
         {

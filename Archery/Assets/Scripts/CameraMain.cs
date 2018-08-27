@@ -23,14 +23,14 @@ public class CameraMain : MonoBehaviour {
         LevelEvents.ContinueToNextLevel += SwitchViewToBehindPlayer; // place camera behind player during the load phase
         BowEvents.ShootArrow += SwitchViewToFollowArrow; // make camera follow arrow during the shoot phase
 	}
-	private void LateUpdate () {
+	private void FixedUpdate () {
         if (cameraFollowArrow)
         {
             if(transform.position.z > activeArrow.transform.position.z + cameraFollowArrowDistanceOffset.z)
             {
                 return;
             }
-            transform.position = Vector3.Lerp(transform.position, activeArrow.transform.position + cameraFollowArrowDistanceOffset, lerpFollowSpeed * Time.deltaTime);
+            transform.position = Vector3.Slerp(transform.position, activeArrow.transform.position + cameraFollowArrowDistanceOffset, lerpFollowSpeed * Time.fixedDeltaTime);
         }
     }
     private void SwitchViewToBehindPlayer()
